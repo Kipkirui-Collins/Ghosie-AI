@@ -9,6 +9,9 @@ export async function GET(request: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!conversationId) return NextResponse.json({ error: "conversationId required" }, { status: 400 });
 
+  const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
+  if (!conv || conv.userId !== user.id) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
   const messages = await prisma.message.findMany({
     where: { conversationId },
     orderBy: { createdAt: "asc" }

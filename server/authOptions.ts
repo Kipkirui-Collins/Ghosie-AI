@@ -7,6 +7,7 @@ import prisma from "../lib/prisma";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     EmailProvider({
       server: {
@@ -44,10 +45,14 @@ export const authOptions = {
       clientSecret: process.env.GITHUB_SECRET || ""
     })
   ],
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   callbacks: {
-    async session({ session, user }: any) {
-      if (session.user) session.user.id = user.id;
+    async jwt({ token, user }: any) {
+      if (user) token.id = user.id;
+      return token;
+    },
+    async session({ session, token }: any) {
+      if (session.user) session.user.id = token.id;
       return session;
     }
   }
