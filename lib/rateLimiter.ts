@@ -11,6 +11,8 @@ const WINDOW = 60; // seconds
 export async function checkRateLimit(key: string): Promise<boolean> {
   try {
     const redis = await getRedisClient();
+    if (!redis) return true; // Redis unavailable - allow request (graceful degradation)
+
     const rateKey = `ratelimit:${key}`;
 
     // Get current token count
@@ -35,6 +37,8 @@ export async function checkRateLimit(key: string): Promise<boolean> {
 export async function getRateLimitRemaining(key: string): Promise<number> {
   try {
     const redis = await getRedisClient();
+    if (!redis) return RATE_LIMIT;
+
     const rateKey = `ratelimit:${key}`;
     const current = await redis.get(rateKey);
     const count = current ? parseInt(current) : 0;

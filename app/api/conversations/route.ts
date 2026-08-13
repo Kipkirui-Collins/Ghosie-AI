@@ -36,7 +36,9 @@ export async function POST(request: Request) {
   // Invalidate cache after creating new conversation
   try {
     const redis = await (await import("../../../lib/redis")).getRedisClient();
-    await redis.del(`conversations:${user.id}`);
+    if (redis) {
+      await redis.del(`conversations:${user.id}`);
+    }
   } catch (error) {
     console.warn("Cache invalidation failed:", error);
   }
