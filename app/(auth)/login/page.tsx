@@ -2,6 +2,7 @@
 import SignInButton from "../../../components/Auth/SignInButton";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 
 export default function LoginPage() {
@@ -163,6 +164,11 @@ export default function LoginPage() {
                 className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400"
                 required
               />
+              <div className="text-right">
+                <Link href="/forgot-password" className="text-xs text-cyan-400 hover:text-cyan-300 transition">
+                  Forgot password?
+                </Link>
+              </div>
               <button
                 type="submit"
                 className="w-full button-neon py-3 px-4 font-semibold text-lg hover:scale-105 transition-transform"
